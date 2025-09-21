@@ -76,7 +76,8 @@ const CalculatorView = () => {
       calculator.outputs.forEach(output => {
         try {
           const result = evaluate(output.formula, inputValues);
-          newResults[output.id] = Number(result.toFixed(4));
+          const numResult = Number(result);
+          newResults[output.id] = Number(numResult.toFixed(4));
         } catch (error) {
           console.error(`Error calculating ${output.id}:`, error);
           newResults[output.id] = 0;

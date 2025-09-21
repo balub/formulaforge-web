@@ -4,10 +4,41 @@ import { Plus, Edit, Trash2, Calculator, Code, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import CreateCalculatorDialog from '@/components/CreateCalculatorDialog';
 import calculatorsData from '@/data/calculators.json';
 
+interface CalculatorData {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  inputs: Array<{
+    id: string;
+    label: string;
+    type: string;
+    required: boolean;
+    min?: number;
+    max?: number;
+    placeholder: string;
+  }>;
+  outputs: Array<{
+    id: string;
+    label: string;
+    unit: string;
+    formula: string;
+  }>;
+}
+
 const AdminPanel = () => {
-  const [calculators] = useState(calculatorsData);
+  const [calculators, setCalculators] = useState<CalculatorData[]>(calculatorsData);
+
+  const handleCreateCalculator = (newCalculator: CalculatorData) => {
+    setCalculators(prev => [...prev, newCalculator]);
+  };
+
+  const handleDeleteCalculator = (id: string) => {
+    setCalculators(prev => prev.filter(calc => calc.id !== id));
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -25,10 +56,7 @@ const AdminPanel = () => {
             <p className="text-muted-foreground">Manage your calculator blocks</p>
           </div>
         </div>
-        <Button className="bg-gradient-primary shadow-elegant hover:shadow-glow transition-smooth">
-          <Plus className="w-4 h-4 mr-2" />
-          Create Calculator
-        </Button>
+        <CreateCalculatorDialog onCreateCalculator={handleCreateCalculator} />
       </div>
 
       {/* Stats */}
@@ -126,7 +154,12 @@ const AdminPanel = () => {
                   <Button variant="ghost" size="sm">
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => handleDeleteCalculator(calc.id)}
+                  >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
