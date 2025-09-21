@@ -1,0 +1,112 @@
+[
+  {
+    "id": "resistor-calculator",
+    "title": "Resistor Calculator",
+    "description": "Calculate resistance using Ohm's Law",
+    "category": "Electronics",
+    "inputs": [
+      {
+        "id": "voltage",
+        "label": "Voltage (V)",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "placeholder": "Enter voltage"
+      },
+      {
+        "id": "current",
+        "label": "Current (A)",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "placeholder": "Enter current"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "resistance",
+        "label": "Resistance (Ω)",
+        "unit": "Ω",
+        "formula": "voltage / current"
+      },
+      {
+        "id": "power",
+        "label": "Power (W)",
+        "unit": "W",
+        "formula": "voltage * current"
+      }
+    ]
+  },
+  {
+    "id": "unit-converter",
+    "title": "Length Converter",
+    "description": "Convert between inches and centimeters",
+    "category": "Conversion",
+    "inputs": [
+      {
+        "id": "inches",
+        "label": "Inches",
+        "type": "number",
+        "required": false,
+        "min": 0,
+        "placeholder": "Enter inches"
+      },
+      {
+        "id": "centimeters",
+        "label": "Centimeters",
+        "type": "number",
+        "required": false,
+        "min": 0,
+        "placeholder": "Enter centimeters"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "cm_result",
+        "label": "Centimeters",
+        "unit": "cm",
+        "formula": "inches * 2.54"
+      },
+      {
+        "id": "inch_result",
+        "label": "Inches",
+        "unit": "in",
+        "formula": "centimeters / 2.54"
+      }
+    ]
+  },
+  {
+    "id": "bmi-calculator",
+    "title": "BMI Calculator",
+    "description": "Calculate Body Mass Index",
+    "category": "Health",
+    "inputs": [
+      {
+        "id": "weight",
+        "label": "Weight (kg)",
+        "type": "number",
+        "required": true,
+        "min": 1,
+        "max": 1000,
+        "placeholder": "Enter weight in kg"
+      },
+      {
+        "id": "height",
+        "label": "Height (cm)",
+        "type": "number",
+        "required": true,
+        "min": 30,
+        "max": 300,
+        "placeholder": "Enter height in cm"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "bmi",
+        "label": "BMI",
+        "unit": "kg/m²",
+        "formula": "weight / ((height / 100) * (height / 100))"
+      }
+    ]
+  }
+]
