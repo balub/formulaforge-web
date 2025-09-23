@@ -197,22 +197,54 @@ const CalculatorView = () => {
         </Card>
       </div>
 
-      {/* Formula Info */}
+      {/* Formula Section */}
       <Card className="bg-gradient-card shadow-card border-0">
         <CardHeader>
-          <CardTitle className="text-lg">Formulas Used</CardTitle>
+          <CardTitle className="text-lg">Formula</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-2">
+        <CardContent className="space-y-6">
+          {/* Formula Display */}
+          <div className="space-y-4">
             {calculator.outputs.map((output) => (
-              <div key={output.id} className="flex items-center justify-between py-2 px-4 rounded bg-muted/30">
-                <span className="font-medium">{output.label}:</span>
-                <code className="text-sm bg-primary/10 px-2 py-1 rounded text-primary">
-                  {output.formula}
-                </code>
+              <div key={output.id} className="p-6 rounded-lg bg-muted/20 border-l-4 border-primary">
+                <div className="text-center">
+                  <div className="text-lg font-medium text-muted-foreground mb-2">
+                    {output.label}
+                  </div>
+                  <div className="text-2xl font-mono bg-background/80 p-4 rounded border inline-block min-w-[200px]">
+                    <span className="text-primary font-semibold">{output.id}</span>
+                    <span className="mx-2">=</span>
+                    <span className="text-foreground">{output.formula}</span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
+
+          {/* Variable Explanations */}
+          {calculator.inputs.length > 0 && (
+            <div className="pt-4 border-t">
+              <h4 className="text-sm font-medium text-muted-foreground mb-3">Where,</h4>
+              <div className="grid gap-2">
+                {calculator.inputs.map((input) => (
+                  <div key={input.id} className="flex items-start gap-3 text-sm">
+                    <span className="font-mono font-semibold text-primary min-w-[60px]">
+                      {input.id} =
+                    </span>
+                    <span className="text-muted-foreground">{input.label}</span>
+                  </div>
+                ))}
+                {calculator.outputs.map((output) => (
+                  <div key={output.id} className="flex items-start gap-3 text-sm">
+                    <span className="font-mono font-semibold text-primary min-w-[60px]">
+                      {output.id} =
+                    </span>
+                    <span className="text-muted-foreground">{output.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
