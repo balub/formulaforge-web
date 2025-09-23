@@ -2,12 +2,14 @@
   {
     "id": "resistor-calculator",
     "title": "Resistor Calculator",
-    "description": "Calculate resistance using Ohm's Law",
+    "description": "Calculate resistance and power using Ohm's Law",
     "category": "Electronics",
     "inputs": [
       {
         "id": "voltage",
-        "label": "Voltage (V)",
+        "label": "Voltage",
+        "symbol": "V",
+        "unit": "Volts (V)",
         "type": "number",
         "required": true,
         "min": 0,
@@ -15,7 +17,9 @@
       },
       {
         "id": "current",
-        "label": "Current (A)",
+        "label": "Current",
+        "symbol": "I",
+        "unit": "Amperes (A)",
         "type": "number",
         "required": true,
         "min": 0,
@@ -25,53 +29,51 @@
     "outputs": [
       {
         "id": "resistance",
-        "label": "Resistance (Ω)",
-        "unit": "Ω",
+        "label": "Resistance",
+        "symbol": "R",
+        "unit": "Ohms (Ω)",
         "formula": "voltage / current"
       },
       {
         "id": "power",
-        "label": "Power (W)",
-        "unit": "W",
+        "label": "Power",
+        "symbol": "P",
+        "unit": "Watts (W)",
         "formula": "voltage * current"
       }
     ]
   },
   {
-    "id": "unit-converter",
+    "id": "length-converter",
     "title": "Length Converter",
     "description": "Convert between inches and centimeters",
-    "category": "Conversion",
+    "category": "Unit Conversion",
     "inputs": [
       {
         "id": "inches",
-        "label": "Inches",
+        "label": "Length in Inches",
+        "symbol": "in",
+        "unit": "Inches (in)",
         "type": "number",
         "required": false,
         "min": 0,
-        "placeholder": "Enter inches"
-      },
-      {
-        "id": "centimeters",
-        "label": "Centimeters",
-        "type": "number",
-        "required": false,
-        "min": 0,
-        "placeholder": "Enter centimeters"
+        "placeholder": "Enter length in inches"
       }
     ],
     "outputs": [
       {
-        "id": "cm_result",
-        "label": "Centimeters",
-        "unit": "cm",
+        "id": "centimeters",
+        "label": "Length in Centimeters",
+        "symbol": "cm",
+        "unit": "Centimeters (cm)",
         "formula": "inches * 2.54"
       },
       {
-        "id": "inch_result",
-        "label": "Inches",
-        "unit": "in",
-        "formula": "centimeters / 2.54"
+        "id": "feet",
+        "label": "Length in Feet",
+        "symbol": "ft",
+        "unit": "Feet (ft)",
+        "formula": "inches / 12"
       }
     ]
   },
@@ -83,29 +85,33 @@
     "inputs": [
       {
         "id": "weight",
-        "label": "Weight (kg)",
+        "label": "Weight",
+        "symbol": "W",
+        "unit": "Kilograms (kg)",
         "type": "number",
         "required": true,
         "min": 1,
-        "max": 1000,
         "placeholder": "Enter weight in kg"
       },
       {
         "id": "height",
-        "label": "Height (cm)",
+        "label": "Height",
+        "symbol": "H",
+        "unit": "Meters (m)",
         "type": "number",
         "required": true,
-        "min": 30,
-        "max": 300,
-        "placeholder": "Enter height in cm"
+        "min": 0.5,
+        "max": 3,
+        "placeholder": "Enter height in meters"
       }
     ],
     "outputs": [
       {
         "id": "bmi",
-        "label": "BMI",
+        "label": "Body Mass Index",
+        "symbol": "BMI",
         "unit": "kg/m²",
-        "formula": "weight / ((height / 100) * (height / 100))"
+        "formula": "weight / (height * height)"
       }
     ]
   }

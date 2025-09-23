@@ -17,6 +17,8 @@ interface CalculatorData {
   inputs: Array<{
     id: string;
     label: string;
+    symbol: string;
+    unit: string;
     type: string;
     required: boolean;
     min?: number;
@@ -26,6 +28,7 @@ interface CalculatorData {
   outputs: Array<{
     id: string;
     label: string;
+    symbol: string;
     unit: string;
     formula: string;
   }>;
@@ -137,13 +140,13 @@ const CalculatorView = () => {
             {calculator.inputs.map((input) => (
               <div key={input.id} className="space-y-2">
                 <Label htmlFor={input.id} className="text-sm font-medium">
-                  {input.label}
+                  {input.label} ({input.symbol})
                   {input.required && <span className="text-destructive ml-1">*</span>}
                 </Label>
                 <Input
                   id={input.id}
                   type="number"
-                  placeholder={input.placeholder}
+                  placeholder={`${input.placeholder} (${input.unit})`}
                   value={inputValues[input.id] || ''}
                   onChange={(e) => {
                     const value = parseFloat(e.target.value);
@@ -179,7 +182,7 @@ const CalculatorView = () => {
             {calculator.outputs.map((output) => (
               <div key={output.id} className="space-y-2">
                 <Label className="text-sm font-medium text-muted-foreground">
-                  {output.label}
+                  {output.label} ({output.symbol})
                 </Label>
                 <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
                   <div className="text-2xl font-bold text-primary">
@@ -212,9 +215,12 @@ const CalculatorView = () => {
                     {output.label}
                   </div>
                   <div className="text-2xl font-mono bg-background/80 p-4 rounded border inline-block min-w-[200px]">
-                    <span className="text-primary font-semibold">{output.id}</span>
+                    <span className="text-primary font-semibold">{output.symbol}</span>
                     <span className="mx-2">=</span>
-                    <span className="text-foreground">{output.formula}</span>
+                    <span className="text-foreground">{output.formula.replace(/(\w+)/g, (match) => {
+                      const input = calculator.inputs.find(inp => inp.id === match);
+                      return input ? input.symbol : match;
+                    })}</span>
                   </div>
                 </div>
               </div>
@@ -229,17 +235,17 @@ const CalculatorView = () => {
                 {calculator.inputs.map((input) => (
                   <div key={input.id} className="flex items-start gap-3 text-sm">
                     <span className="font-mono font-semibold text-primary min-w-[60px]">
-                      {input.id} =
+                      {input.symbol} =
                     </span>
-                    <span className="text-muted-foreground">{input.label}</span>
+                    <span className="text-muted-foreground">{input.label} ({input.unit})</span>
                   </div>
                 ))}
                 {calculator.outputs.map((output) => (
                   <div key={output.id} className="flex items-start gap-3 text-sm">
                     <span className="font-mono font-semibold text-primary min-w-[60px]">
-                      {output.id} =
+                      {output.symbol} =
                     </span>
-                    <span className="text-muted-foreground">{output.label}</span>
+                    <span className="text-muted-foreground">{output.label} ({output.unit})</span>
                   </div>
                 ))}
               </div>

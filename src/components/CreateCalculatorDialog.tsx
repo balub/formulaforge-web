@@ -13,6 +13,8 @@ import { Badge } from '@/components/ui/badge';
 interface InputField {
   id: string;
   label: string;
+  symbol: string;
+  unit: string;
   type: string;
   required: boolean;
   min?: number;
@@ -23,6 +25,7 @@ interface InputField {
 interface OutputField {
   id: string;
   label: string;
+  symbol: string;
   unit: string;
   formula: string;
 }
@@ -60,6 +63,8 @@ const CreateCalculatorDialog = ({ onCreateCalculator }: CreateCalculatorDialogPr
     const newInput: InputField = {
       id: `input_${Date.now()}`,
       label: '',
+      symbol: '',
+      unit: '',
       type: 'number',
       required: true,
       placeholder: 'Enter value'
@@ -81,6 +86,7 @@ const CreateCalculatorDialog = ({ onCreateCalculator }: CreateCalculatorDialogPr
     const newOutput: OutputField = {
       id: `output_${Date.now()}`,
       label: '',
+      symbol: '',
       unit: '',
       formula: ''
     };
@@ -208,15 +214,31 @@ const CreateCalculatorDialog = ({ onCreateCalculator }: CreateCalculatorDialogPr
                       <div className="space-y-2">
                         <Label>Label</Label>
                         <Input
-                          placeholder="e.g., Weight (kg)"
+                          placeholder="e.g., Voltage"
                           value={input.label}
                           onChange={(e) => updateInput(index, 'label', e.target.value)}
                         />
                       </div>
                       <div className="space-y-2">
+                        <Label>Symbol</Label>
+                        <Input
+                          placeholder="e.g., V"
+                          value={input.symbol}
+                          onChange={(e) => updateInput(index, 'symbol', e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Unit</Label>
+                        <Input
+                          placeholder="e.g., Volts (V)"
+                          value={input.unit}
+                          onChange={(e) => updateInput(index, 'unit', e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
                         <Label>Placeholder</Label>
                         <Input
-                          placeholder="e.g., Enter weight"
+                          placeholder="e.g., Enter voltage"
                           value={input.placeholder}
                           onChange={(e) => updateInput(index, 'placeholder', e.target.value)}
                         />
@@ -285,19 +307,27 @@ const CreateCalculatorDialog = ({ onCreateCalculator }: CreateCalculatorDialogPr
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-2">
                         <Label>Label</Label>
                         <Input
-                          placeholder="e.g., BMI Score"
+                          placeholder="e.g., Resistance"
                           value={output.label}
                           onChange={(e) => updateOutput(index, 'label', e.target.value)}
                         />
                       </div>
                       <div className="space-y-2">
+                        <Label>Symbol</Label>
+                        <Input
+                          placeholder="e.g., R"
+                          value={output.symbol}
+                          onChange={(e) => updateOutput(index, 'symbol', e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
                         <Label>Unit</Label>
                         <Input
-                          placeholder="e.g., kg/m², %"
+                          placeholder="e.g., Ohms (Ω)"
                           value={output.unit}
                           onChange={(e) => updateOutput(index, 'unit', e.target.value)}
                         />
@@ -305,7 +335,7 @@ const CreateCalculatorDialog = ({ onCreateCalculator }: CreateCalculatorDialogPr
                       <div className="space-y-2">
                         <Label>Formula</Label>
                         <Input
-                          placeholder="e.g., weight / (height * height)"
+                          placeholder="e.g., voltage / current"
                           value={output.formula}
                           onChange={(e) => updateOutput(index, 'formula', e.target.value)}
                         />
