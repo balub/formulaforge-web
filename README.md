@@ -85,16 +85,12 @@ MIT
 
 ```
 
-## Generate new JSON
+Generate new JSON
 
 You are given the contents of an electronics calculator webpage (title, description, inputs, formula, etc.).  
 Your job is to convert it into a structured JSON definition in the exact format below.
+JSON FORMAT
 
----
-
-### JSON FORMAT
-
-```json
 {
   "id": "<unique-id-kebab-case>",
   "title": "<Calculator Title>",
@@ -121,11 +117,8 @@ Your job is to convert it into a structured JSON definition in the exact format 
     }
   ]
 }
-```
 
----
-
-### RULES
+RULES
 
 - Use valid JavaScript Math expressions (`Math.log10`, `Math.pow`, `Math.sqrt`, `*`, `/`, `+`, `-`).
 - Each input/output id must be in `snake_case`.
@@ -136,20 +129,17 @@ Your job is to convert it into a structured JSON definition in the exact format 
 - Units should match the website (e.g., "mm", "inches", "Ω"). If none, leave empty.
 - Replace variable names (`d, l, n`) with their matching input IDs.
 
----
+ ✅ Example (taken directly from a real webpage)
 
-### ✅ Example (taken directly from a real webpage)
-
-**Input webpage text:**
+Input webpage text:
 
 PCB Microstrip Crosstalk Calculator  
 Inputs: Substrate Height (H, mm), Trace Spacing (S, mm)  
 Formula:  
 CTdb = 20 log10(1 / (1 + (S/H)^2))
 
-**Correct JSON output:**
+Correct JSON output:
 
-```json
 {
   "id": "pcb-microstrip-crosstalk-calculator",
   "title": "PCB Microstrip Crosstalk Calculator",
@@ -185,11 +175,8 @@ CTdb = 20 log10(1 / (1 + (S/H)^2))
     }
   ]
 }
-```
 
----
-
-### TASK
+TASK
 
 Whenever I paste a new calculator webpage (title, description, inputs, formulas, etc.),  
 convert it into JSON using the exact format and rules above.
