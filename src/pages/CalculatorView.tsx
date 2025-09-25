@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import calculatorsData from "@/data/calculators.json";
 import { evaluate } from "mathjs";
+import "katex/dist/katex.min.css";
+import MathDisplay from "@/components/MathDisplay";
 
 interface CalculatorData {
   id: string;
@@ -37,6 +39,7 @@ interface CalculatorData {
     symbol: string;
     unit: string;
     formula: string;
+    formula_display?: string;
   }>;
 }
 
@@ -240,19 +243,25 @@ const CalculatorView = () => {
                   <div className="text-lg font-medium text-muted-foreground mb-2">
                     {output.label}
                   </div>
-                  <div className="text-2xl font-mono bg-background/80 p-4 rounded border inline-block min-w-[200px]">
-                    <span className="text-primary font-semibold">
-                      {output.symbol}
-                    </span>
-                    <span className="mx-2">=</span>
-                    <span className="text-foreground">
-                      {output.formula.replace(/(\w+)/g, (match) => {
-                        const input = calculator.inputs.find(
-                          (inp) => inp.id === match
-                        );
-                        return input ? input.symbol : match;
-                      })}
-                    </span>
+                  <div className="bg-background/80 p-4 rounded border">
+                    <div className="text-center">
+                      <MathDisplay
+                        math={
+                          output.formula_display ||
+                          `${output.symbol} = ${output.formula
+                            .replace(/Math\.sqrt/g, "\\sqrt")
+                            .replace(/Math\.log/g, "\\ln")
+                            .replace(/(\w+)/g, (match) => {
+                              const input = calculator.inputs.find(
+                                (inp) => inp.id === match
+                              );
+                              return input ? input.symbol : match;
+                            })}`
+                        }
+                        display={true}
+                        className="text-lg"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -31,14 +31,16 @@
         "label": "Resistance",
         "symbol": "R",
         "unit": "Ohms (Ω)",
-        "formula": "voltage / current"
+        "formula": "voltage / current",
+        "formula_display": "R = \\frac{V}{I}"
       },
       {
         "id": "power",
         "label": "Power",
         "symbol": "P",
         "unit": "Watts (W)",
-        "formula": "voltage * current"
+        "formula": "voltage * current",
+        "formula_display": "P = V \\cdot I"
       }
     ]
   },
@@ -64,14 +66,16 @@
         "label": "Length in Centimeters",
         "symbol": "cm",
         "unit": "Centimeters (cm)",
-        "formula": "inches * 2.54"
+        "formula": "inches * 2.54",
+        "formula_display": "\\text{cm} = \\text{in} \\times 2.54"
       },
       {
         "id": "feet",
         "label": "Length in Feet",
         "symbol": "ft",
         "unit": "Feet (ft)",
-        "formula": "inches / 12"
+        "formula": "inches / 12",
+        "formula_display": "\\text{ft} = \\frac{\\text{in}}{12}"
       }
     ]
   },
@@ -108,7 +112,8 @@
         "label": "Body Mass Index",
         "symbol": "BMI",
         "unit": "kg/m²",
-        "formula": "weight / (height * height)"
+        "formula": "weight / (height * height)",
+        "formula_display": "\\text{BMI} = \\frac{W}{H^2}"
       }
     ]
   },
@@ -160,14 +165,16 @@
         "label": "Resistance",
         "symbol": "R",
         "unit": "Ohms (Ω)",
-        "formula": "(supply_voltage - voltage_drop) / forward_current"
+        "formula": "(supply_voltage - voltage_drop) / forward_current",
+        "formula_display": "R = \\frac{V_s - V_d}{I_f}"
       },
       {
         "id": "power_dissipation",
         "label": "Power Dissipation",
         "symbol": "P",
         "unit": "Watts (W)",
-        "formula": "(supply_voltage - voltage_drop) * forward_current"
+        "formula": "(supply_voltage - voltage_drop) * forward_current",
+        "formula_display": "P = (V_s - V_d) \\cdot I_f"
       }
     ],
     "formula_display": "R = (Vs - Vd) / If",
@@ -208,7 +215,8 @@
         "label": "Voltage",
         "symbol": "V",
         "unit": "Volts (V)",
-        "formula": "input_1758792782858 * input_1758792809110"
+        "formula": "input_1758792782858 * input_1758792809110",
+        "formula_display": "V = I \\cdot R"
       }
     ]
   },
@@ -263,7 +271,8 @@
         "label": "Inductance",
         "symbol": "L",
         "unit": "µH",
-        "formula": "(4.921 * (turns * turns) * ((outer_diameter + inner_diameter) * (outer_diameter + inner_diameter))) / ((15 * outer_diameter) - (7 * inner_diameter)) * dimension"
+        "formula": "(4.921 * (turns * turns) * ((outer_diameter + inner_diameter) * (outer_diameter + inner_diameter))) / ((15 * outer_diameter) - (7 * inner_diameter)) * dimension",
+        "formula_display": "L = \\frac{4.921 \\cdot N^2 \\cdot (d_1 + d_2)^2}{15d_1 - 7d_2} \\cdot k"
       }
     ],
     "formula_display": "L = (4.921 * N² * (d1 + d2)²) / (15d1 - 7d2) * k",
@@ -272,6 +281,83 @@
       "d1 = outer diameter (mm)",
       "d2 = inner diameter (mm)",
       "k = dimension factor (1 for mm, 0.0254 for mils)"
+    ]
+  },
+  {
+    "id": "symmetric-stripline-impedance-calculator",
+    "title": "Symmetric Stripline Impedance Calculator",
+    "description": "Calculate characteristic impedance, capacitance, propagation delay, and inductance of a symmetric stripline based on dielectric permittivity, height, trace thickness, and width.",
+    "inputs": [
+      {
+        "id": "substrate_dielectric",
+        "label": "Substrate Dielectric",
+        "symbol": "ε",
+        "unit": "",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter relative permittivity of dielectric"
+      },
+      {
+        "id": "dielectric_height",
+        "label": "Dielectric Height",
+        "symbol": "h",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter dielectric height"
+      },
+      {
+        "id": "trace_thickness",
+        "label": "Trace Thickness",
+        "symbol": "t",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter trace thickness"
+      },
+      {
+        "id": "trace_width",
+        "label": "Width of the Trace",
+        "symbol": "w",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter width of trace"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "impedance",
+        "label": "Characteristic Impedance",
+        "symbol": "Z",
+        "unit": "Ohms (Ω)",
+        "formula": "60 / Math.sqrt(substrate_dielectric) * Math.log(1.92 * (2 * dielectric_height + trace_thickness) / (0.8 * trace_width + trace_thickness))",
+        "formula_display": "z = \\frac{60}{\\sqrt{\\varepsilon}} \\cdot \\ln\\left(\\frac{1.92 \\cdot (2h + t)}{0.8w + t}\\right)"
+      },
+      {
+        "id": "capacitance",
+        "label": "Capacitance per Unit Length",
+        "symbol": "C",
+        "unit": "F/m",
+        "formula": "5.55e-11 * substrate_dielectric / Math.log(3.81 * dielectric_height / (0.8 * trace_width + trace_thickness))",
+        "formula_display": "c = \\frac{5.55 \\times 10^{-11} \\cdot \\varepsilon}{\\ln\\left(\\frac{3.81h}{0.8w + t}\\right)}"
+      },
+      {
+        "id": "propagation_delay",
+        "label": "Effective Propagation Delay",
+        "symbol": "P",
+        "unit": "s/m",
+        "formula": "3.34e-9 * Math.sqrt(substrate_dielectric)",
+        "formula_display": "p = 3.34 \\times 10^{-9} \\cdot \\sqrt{\\varepsilon}"
+      },
+      {
+        "id": "inductance",
+        "label": "Inductance per Unit Length",
+        "symbol": "L",
+        "unit": "H/m",
+        "formula": "capacitance * impedance * impedance",
+        "formula_display": "l = c \\cdot z \\cdot z"
+      }
     ]
   }
 ]
