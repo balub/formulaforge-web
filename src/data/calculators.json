@@ -357,5 +357,49 @@
         "formula_display": "L = C \\cdot Z \\cdot Z"
       }
     ]
+  },
+  {
+    "id": "air-core-coil-inductance-calculator",
+    "title": "Inductance of An Air Core Coil Calculator",
+    "description": "Calculate the inductance of an air core coil based on coil diameter, coil length, and number of turns.",
+    "inputs": [
+      {
+        "id": "coil_diameter",
+        "label": "Coil Diameter",
+        "symbol": "d",
+        "unit": "inches",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter coil diameter"
+      },
+      {
+        "id": "coil_length",
+        "label": "Coil Length",
+        "symbol": "l",
+        "unit": "inches",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter coil length"
+      },
+      {
+        "id": "turns",
+        "label": "Number of Turns",
+        "symbol": "n",
+        "unit": "",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter number of turns"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "inductance",
+        "label": "Inductance",
+        "symbol": "L",
+        "unit": "µH",
+        "formula": "(Math.pow(coil_diameter, 2) * Math.pow(turns, 2)) / (18 * coil_diameter + 40 * coil_length)",
+        "formula_display": "L = \\frac{d^2 \\cdot n^2}{18d + 40l}"
+      }
+    ]
   }
 ]
