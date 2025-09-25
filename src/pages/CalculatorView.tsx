@@ -13,104 +13,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import calculatorsData from "@/data/calculators.json";
-import { evaluate } from "mathjs";
 import "katex/dist/katex.min.css";
 import MathDisplay from "@/components/MathDisplay";
-
-interface CalculatorData {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  inputs: Array<{
-    id: string;
-    label: string;
-    symbol: string;
-    unit: string;
-    type: string;
-    required: boolean;
-    min?: number;
-    max?: number;
-    placeholder: string;
-  }>;
-  outputs: Array<{
-    id: string;
-    label: string;
-    symbol: string;
-    unit: string;
-    formula: string;
-    formula_display?: string;
-  }>;
-}
+import { useCalculator } from "@/hooks/useCalculator";
+import { Calculator as CalculatorType } from "@/types/calculator";
 
 const CalculatorView = () => {
   const { id } = useParams<{ id: string }>();
-  const [inputValues, setInputValues] = useState<Record<string, number>>({});
-  const [results, setResults] = useState<Record<string, number>>({});
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const calculator = calculatorsData.find((calc) => calc.id === id) as
-    | CalculatorData
+    | CalculatorType
     | undefined;
 
-  const validateInput = (
-    inputConfig: CalculatorData["inputs"][number],
-    value: number
-  ): string | null => {
-    if (
-      inputConfig.required &&
-      (isNaN(value) || value === null || value === undefined)
-    ) {
-      return "This field is required";
-    }
-    if (!isNaN(value)) {
-      if (inputConfig.min !== undefined && value < inputConfig.min) {
-        return `Value must be at least ${inputConfig.min}`;
-      }
-      if (inputConfig.max !== undefined && value > inputConfig.max) {
-        return `Value must be at most ${inputConfig.max}`;
-      }
-    }
-    return null;
-  };
-
-  const calculateResults = useCallback(() => {
-    if (!calculator) return;
-
-    const newResults: Record<string, number> = {};
-    const newErrors: Record<string, string> = {};
-
-    // Validate inputs
-    calculator.inputs.forEach((input) => {
-      const value = inputValues[input.id];
-      const error = validateInput(input, value);
-      if (error) {
-        newErrors[input.id] = error;
-      }
-    });
-
-    setErrors(newErrors);
-
-    // Calculate if no errors
-    if (Object.keys(newErrors).length === 0) {
-      calculator.outputs.forEach((output) => {
-        try {
-          const result = evaluate(output.formula, inputValues);
-          const numResult = Number(result);
-          newResults[output.id] = Number(numResult.toFixed(4));
-        } catch (error) {
-          console.error(`Error calculating ${output.id}:`, error);
-          newResults[output.id] = 0;
-        }
-      });
-    }
-
-    setResults(newResults);
-  }, [calculator, inputValues]);
-
-  useEffect(() => {
-    calculateResults();
-  }, [calculateResults]);
+  const { inputValues, results, errors, updateInputValue, resetCalculator } =
+    useCalculator(calculator!);
 
   if (!calculator) {
     return (
@@ -174,10 +90,7 @@ const CalculatorView = () => {
                   value={inputValues[input.id] || ""}
                   onChange={(e) => {
                     const value = parseFloat(e.target.value);
-                    setInputValues((prev) => ({
-                      ...prev,
-                      [input.id]: isNaN(value) ? undefined : value,
-                    }));
+                    updateInputValue(input.id, isNaN(value) ? 0 : value);
                   }}
                   className={errors[input.id] ? "border-destructive" : ""}
                 />

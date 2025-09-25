@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Download, Plus, Trash2, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import MathDisplay from "@/components/MathDisplay";
+import { useCalculatorBuilder } from "@/hooks/useCalculatorBuilder";
 
 interface InputField {
   id: string;
@@ -29,6 +30,7 @@ interface OutputField {
   unit: string;
   formula: string;
   formula_display?: string;
+  latex_formula?: string;
 }
 
 interface CalculatorData {
@@ -39,53 +41,42 @@ interface CalculatorData {
   outputs: OutputField[];
 }
 
-// Function to convert JavaScript formula to LaTeX format
-const convertFormulaToLaTeX = (
+// Function to generate LaTeX template suggestions
+const generateLaTeXTemplate = (
   formula: string,
   inputs: InputField[],
   outputSymbol: string
 ): string => {
   if (!formula.trim()) return "";
 
-  let latexFormula = formula;
-
-  // Replace Math functions
-  latexFormula = latexFormula.replace(/Math\.sqrt\(/g, "\\sqrt{");
-  latexFormula = latexFormula.replace(/Math\.log\(/g, "\\ln(");
-  latexFormula = latexFormula.replace(/Math\.sin\(/g, "\\sin(");
-  latexFormula = latexFormula.replace(/Math\.cos\(/g, "\\cos(");
-  latexFormula = latexFormula.replace(/Math\.tan\(/g, "\\tan(");
-  latexFormula = latexFormula.replace(/Math\.pow\(/g, "\\text{pow}(");
-
-  // Replace operators
-  latexFormula = latexFormula.replace(/\*/g, " \\cdot ");
-  latexFormula = latexFormula.replace(/\^/g, "^");
-
-  // Replace division with fractions (simple cases)
-  latexFormula = latexFormula.replace(
-    /([a-zA-Z0-9_]+)\s*\/\s*([a-zA-Z0-9_()]+)/g,
-    "\\frac{$1}{$2}"
-  );
+  // Simple template generation based on common patterns
+  let template = formula;
 
   // Replace input IDs with their symbols
   inputs.forEach((input) => {
     const regex = new RegExp(`\\b${input.id}\\b`, "g");
-    latexFormula = latexFormula.replace(regex, input.symbol || input.id);
+    template = template.replace(regex, input.symbol || input.id);
   });
 
-  // Handle parentheses for sqrt and ln
-  latexFormula = latexFormula.replace(/\\sqrt\{([^}]+)\)/g, "\\sqrt{$1}");
-  latexFormula = latexFormula.replace(/\\ln\(([^)]+)\)/g, "\\ln($1)");
+  // Add common LaTeX patterns
+  template = template.replace(/\*/g, " \\cdot ");
+  template = template.replace(/\^/g, "^");
+  template = template.replace(/\//g, " / ");
 
-  // Handle scientific notation
-  latexFormula = latexFormula.replace(
-    /(\d+\.?\d*)\s*e\s*([+-]?\d+)/g,
-    "$1 \\times 10^{$2}"
-  );
-
-  // Add output symbol
-  return `${outputSymbol} = ${latexFormula}`;
+  return `${outputSymbol} = ${template}`;
 };
+
+// Common LaTeX templates for quick insertion
+const latexTemplates = [
+  { name: "Fraction", template: "\\frac{numerator}{denominator}" },
+  { name: "Square Root", template: "\\sqrt{expression}" },
+  { name: "Natural Log", template: "\\ln(expression)" },
+  { name: "Power", template: "base^{exponent}" },
+  { name: "Multiplication", template: "a \\cdot b" },
+  { name: "Scientific Notation", template: "1.23 \\times 10^{-4}" },
+  { name: "Parentheses", template: "\\left( expression \\right)" },
+  { name: "Greek Letters", template: "\\alpha, \\beta, \\gamma, \\varepsilon" },
+];
 
 const CalculatorBuilder = () => {
   const [title, setTitle] = useState("");
@@ -127,6 +118,7 @@ const CalculatorBuilder = () => {
       symbol: "",
       unit: "",
       formula: "",
+      latex_formula: "",
     };
     setOutputs((prev) => [...prev, newOutput]);
   };
@@ -169,11 +161,13 @@ const CalculatorBuilder = () => {
     // Generate outputs with formula_display
     const outputsWithDisplay = outputs.map((output) => ({
       ...output,
-      formula_display: convertFormulaToLaTeX(
-        output.formula,
-        inputs,
-        output.symbol || output.id
-      ),
+      formula_display:
+        output.latex_formula ||
+        generateLaTeXTemplate(
+          output.formula,
+          inputs,
+          output.symbol || output.id
+        ),
     }));
 
     return {
@@ -441,7 +435,7 @@ const CalculatorBuilder = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Formula</Label>
+                    <Label>Formula (JavaScript)</Label>
                     <Input
                       placeholder="e.g., voltage / current"
                       value={output.formula}
@@ -449,6 +443,19 @@ const CalculatorBuilder = () => {
                         updateOutput(index, "formula", e.target.value)
                       }
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>LaTeX Formula (Optional)</Label>
+                    <Input
+                      placeholder="e.g., R = \\frac{V}{I}"
+                      value={output.latex_formula || ""}
+                      onChange={(e) =>
+                        updateOutput(index, "latex_formula", e.target.value)
+                      }
+                    />
+                    <div className="text-xs text-muted-foreground">
+                      Leave empty to auto-generate from JavaScript formula
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2">
@@ -475,6 +482,31 @@ const CalculatorBuilder = () => {
                   Use input IDs in formulas. Supports +, -, *, /, parentheses,
                   and functions supported by mathjs.
                 </div>
+
+                {/* LaTeX Template Helper */}
+                <div className="pt-4 border-t">
+                  <div className="text-sm font-medium text-muted-foreground mb-2">
+                    LaTeX Templates (click to insert):
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {latexTemplates.map((template, templateIndex) => (
+                      <Button
+                        key={templateIndex}
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs"
+                        onClick={() => {
+                          const currentLatex = output.latex_formula || "";
+                          const newLatex = currentLatex + template.template;
+                          updateOutput(index, "latex_formula", newLatex);
+                        }}
+                        title={`Insert ${template.name}`}
+                      >
+                        {template.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))
           )}
@@ -493,11 +525,13 @@ const CalculatorBuilder = () => {
               </p>
             ) : (
               outputs.map((output) => {
-                const latexFormula = convertFormulaToLaTeX(
-                  output.formula,
-                  inputs,
-                  output.symbol || output.id
-                );
+                const latexFormula =
+                  output.latex_formula ||
+                  generateLaTeXTemplate(
+                    output.formula,
+                    inputs,
+                    output.symbol || output.id
+                  );
                 return (
                   <div
                     key={output.id}

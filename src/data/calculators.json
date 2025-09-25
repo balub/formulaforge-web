@@ -177,7 +177,6 @@
         "formula_display": "P = (V_s - V_d) \\cdot I_f"
       }
     ],
-    "formula_display": "R = (Vs - Vd) / If",
     "notes": [
       "Don't end with comma (,)",
       "Ensure the resistor's power rating exceeds the calculated power dissipation",
@@ -275,7 +274,6 @@
         "formula_display": "L = \\frac{4.921 \\cdot N^2 \\cdot (d_1 + d_2)^2}{15d_1 - 7d_2} \\cdot k"
       }
     ],
-    "formula_display": "L = (4.921 * N² * (d1 + d2)²) / (15d1 - 7d2) * k",
     "notes": [
       "N = number of turns",
       "d1 = outer diameter (mm)",
@@ -332,7 +330,7 @@
         "symbol": "Z",
         "unit": "Ohms (Ω)",
         "formula": "60 / Math.sqrt(substrate_dielectric) * Math.log(1.92 * (2 * dielectric_height + trace_thickness) / (0.8 * trace_width + trace_thickness))",
-        "formula_display": "z = \\frac{60}{\\sqrt{\\varepsilon}} \\cdot \\ln\\left(\\frac{1.92 \\cdot (2h + t)}{0.8w + t}\\right)"
+        "formula_display": "Z = \\frac{60}{\\sqrt{\\varepsilon}} \\cdot \\ln\\left(\\frac{1.92 \\cdot (2h + t)}{0.8w + t}\\right)"
       },
       {
         "id": "capacitance",
@@ -340,7 +338,7 @@
         "symbol": "C",
         "unit": "F/m",
         "formula": "5.55e-11 * substrate_dielectric / Math.log(3.81 * dielectric_height / (0.8 * trace_width + trace_thickness))",
-        "formula_display": "c = \\frac{5.55 \\times 10^{-11} \\cdot \\varepsilon}{\\ln\\left(\\frac{3.81h}{0.8w + t}\\right)}"
+        "formula_display": "C = \\frac{5.55 \\times 10^{-11} \\cdot \\varepsilon}{\\ln\\left(\\frac{3.81h}{0.8w + t}\\right)}"
       },
       {
         "id": "propagation_delay",
@@ -348,7 +346,7 @@
         "symbol": "P",
         "unit": "s/m",
         "formula": "3.34e-9 * Math.sqrt(substrate_dielectric)",
-        "formula_display": "p = 3.34 \\times 10^{-9} \\cdot \\sqrt{\\varepsilon}"
+        "formula_display": "P = 3.34 \\times 10^{-9} \\cdot \\sqrt{\\varepsilon}"
       },
       {
         "id": "inductance",
@@ -356,7 +354,7 @@
         "symbol": "L",
         "unit": "H/m",
         "formula": "capacitance * impedance * impedance",
-        "formula_display": "l = c \\cdot z \\cdot z"
+        "formula_display": "L = C \\cdot Z \\cdot Z"
       }
     ]
   }

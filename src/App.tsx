@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import CalculatorsList from "./pages/CalculatorsList";
-import CalculatorBuilder from "./pages/CalculatorBuilder";
+import CalculatorBuilder from "./pages/CalculatorBuilderNew";
 import CalculatorView from "./pages/CalculatorView";
 import NotFound from "./pages/NotFound";
 
