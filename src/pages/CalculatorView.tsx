@@ -46,7 +46,6 @@ const CalculatorView = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <Link to="/">
           <Button variant="ghost" size="sm">
@@ -63,7 +62,6 @@ const CalculatorView = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Inputs Card */}
         <Card className="bg-gradient-card shadow-card border-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -102,7 +100,6 @@ const CalculatorView = () => {
           </CardContent>
         </Card>
 
-        {/* Results Card */}
         <Card className="bg-gradient-card shadow-card border-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -139,13 +136,11 @@ const CalculatorView = () => {
         </Card>
       </div>
 
-      {/* Formula Section */}
       <Card className="bg-gradient-card shadow-card border-0">
         <CardHeader>
           <CardTitle className="text-lg">Formula</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Formula Display */}
           <div className="space-y-4">
             {calculator.outputs.map((output) => (
               <div
@@ -181,7 +176,6 @@ const CalculatorView = () => {
             ))}
           </div>
 
-          {/* Variable Explanations */}
           {calculator.inputs.length > 0 && (
             <div className="pt-4 border-t">
               <h4 className="text-sm font-medium text-muted-foreground mb-3">

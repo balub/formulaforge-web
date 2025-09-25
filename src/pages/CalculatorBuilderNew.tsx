@@ -34,6 +34,7 @@ const CalculatorBuilder = () => {
     updateOutput,
     appendTokenToFormula,
     generateLaTeX,
+    createCalculator,
     exportToJSON,
     importFromJSON,
     resetForm,
@@ -80,7 +81,6 @@ const CalculatorBuilder = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <Link to="/">
@@ -109,7 +109,6 @@ const CalculatorBuilder = () => {
         </div>
       </div>
 
-      {/* Errors */}
       {errors.length > 0 && (
         <Card className="border-destructive">
           <CardContent className="pt-6">
@@ -128,7 +127,6 @@ const CalculatorBuilder = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Basic Information */}
         <Card className="bg-gradient-card shadow-card border-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -177,7 +175,6 @@ const CalculatorBuilder = () => {
           </CardContent>
         </Card>
 
-        {/* Import/Export */}
         <Card className="bg-gradient-card shadow-card border-0">
           <CardHeader>
             <CardTitle>Import/Export</CardTitle>
@@ -204,7 +201,6 @@ const CalculatorBuilder = () => {
         </Card>
       </div>
 
-      {/* Inputs */}
       <Card className="bg-gradient-card shadow-card border-0">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -341,7 +337,6 @@ const CalculatorBuilder = () => {
         </CardContent>
       </Card>
 
-      {/* Outputs */}
       <Card className="bg-gradient-card shadow-card border-0">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -418,7 +413,6 @@ const CalculatorBuilder = () => {
                   </div>
                 </div>
 
-                {/* LaTeX Formula */}
                 <div className="space-y-2">
                   <Label>LaTeX Formula (Optional)</Label>
                   <Input
@@ -433,7 +427,6 @@ const CalculatorBuilder = () => {
                   </div>
                 </div>
 
-                {/* Input Insertion Buttons */}
                 {formData.inputs.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     <span className="text-xs font-medium text-muted-foreground mr-1 self-center">
@@ -459,7 +452,6 @@ const CalculatorBuilder = () => {
                   </div>
                 )}
 
-                {/* LaTeX Templates */}
                 <div className="pt-4 border-t">
                   <div className="text-sm font-medium text-muted-foreground mb-2">
                     LaTeX Templates (click to insert):
@@ -489,7 +481,6 @@ const CalculatorBuilder = () => {
         </CardContent>
       </Card>
 
-      {/* Formula Preview */}
       <Card className="bg-gradient-card shadow-card border-0">
         <CardHeader>
           <CardTitle className="text-lg">Formula Preview</CardTitle>
@@ -514,7 +505,6 @@ const CalculatorBuilder = () => {
                         {output.label || `Output ${index + 1}`}
                       </div>
 
-                      {/* JavaScript Formula */}
                       <div>
                         <div className="text-sm text-muted-foreground mb-2">
                           JavaScript Formula:
@@ -530,7 +520,6 @@ const CalculatorBuilder = () => {
                         </div>
                       </div>
 
-                      {/* LaTeX Preview */}
                       {latexFormula && (
                         <div>
                           <div className="text-sm text-muted-foreground mb-2">

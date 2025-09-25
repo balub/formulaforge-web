@@ -51,7 +51,6 @@ const CalculatorsList = () => {
         </Link>
       </div>
 
-      {/* Search Bar */}
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
         <Input
@@ -73,7 +72,6 @@ const CalculatorsList = () => {
         )}
       </div>
 
-      {/* Search Results Info */}
       {searchQuery && (
         <div className="text-sm text-muted-foreground">
           {filteredCalculators.length === 0 ? (

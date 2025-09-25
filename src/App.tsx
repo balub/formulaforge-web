@@ -23,7 +23,6 @@ const App = () => (
             <Route path="builder" element={<CalculatorBuilder />} />
             <Route path="calculator/:id" element={<CalculatorView />} />
           </Route>
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
