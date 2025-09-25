@@ -6,6 +6,9 @@ export const useCalculator = (calculator: Calculator) => {
   const [inputValues, setInputValues] = useState<Record<string, number>>({});
   const [results, setResults] = useState<Record<string, number>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
+    {}
+  );
 
   // Validate input
   const validateInput = useCallback(
@@ -36,12 +39,15 @@ export const useCalculator = (calculator: Calculator) => {
     const newResults: Record<string, number> = {};
     const newErrors: Record<string, string> = {};
 
-    // Validate inputs
+    // Validate inputs - only validate touched fields
     calculator.inputs.forEach((input) => {
       const value = inputValues[input.id];
-      const error = validateInput(input, value);
-      if (error) {
-        newErrors[input.id] = error;
+      // Only validate if the field has been touched by the user
+      if (touchedFields[input.id]) {
+        const error = validateInput(input, value);
+        if (error) {
+          newErrors[input.id] = error;
+        }
       }
     });
 
@@ -89,13 +95,18 @@ export const useCalculator = (calculator: Calculator) => {
     }
 
     setResults(newResults);
-  }, [calculator, inputValues, validateInput]);
+  }, [calculator, inputValues, validateInput, touchedFields]);
 
   // Update input value
   const updateInputValue = useCallback((inputId: string, value: number) => {
     setInputValues((prev) => ({
       ...prev,
       [inputId]: isNaN(value) ? undefined : value,
+    }));
+    // Mark field as touched when user interacts with it
+    setTouchedFields((prev) => ({
+      ...prev,
+      [inputId]: true,
     }));
   }, []);
 
@@ -104,6 +115,7 @@ export const useCalculator = (calculator: Calculator) => {
     setInputValues({});
     setResults({});
     setErrors({});
+    setTouchedFields({});
   }, []);
 
   // Auto-calculate when inputs change

@@ -401,5 +401,40 @@
         "formula_display": "L = \\frac{d^2 \\cdot n^2}{18d + 40l}"
       }
     ]
+  },
+  {
+    "id": "pcb-microstrip-crosstalk-calculator",
+    "title": "PCB Microstrip Crosstalk Calculator",
+    "description": "Calculate the crosstalk (in dB) between two microstrip traces on a PCB based on trace spacing and substrate height.",
+    "inputs": [
+      {
+        "id": "substrate_height",
+        "label": "Substrate Height",
+        "symbol": "H",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter substrate height"
+      },
+      {
+        "id": "trace_spacing",
+        "label": "Trace Spacing",
+        "symbol": "S",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter trace spacing"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "crosstalk",
+        "label": "Crosstalk",
+        "symbol": "CTdb",
+        "unit": "dB",
+        "formula": "20 * Math.log10(1 / (1 + Math.pow(trace_spacing / substrate_height, 2)))",
+        "formula_display": "CT_{dB} = 20 \\cdot \\log_{10} \\left( \\frac{1}{1 + (\\frac{S}{H})^2} \\right)"
+      }
+    ]
   }
 ]
