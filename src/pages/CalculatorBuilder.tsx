@@ -104,15 +104,7 @@ const CalculatorBuilder = () => {
     updateOutput(outputIndex, "formula", next);
   };
 
-  const buildSymbolPreview = (formula: string): string => {
-    if (!formula) return "";
-    const idToSymbol = new Map<string, string>();
-    inputs.forEach((inp) => idToSymbol.set(inp.id, inp.symbol || inp.id));
-    return formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (token) => {
-      const symbol = idToSymbol.get(token);
-      return symbol !== undefined ? symbol : token;
-    });
-  };
+  // Note: Formulas are built using input IDs by design for unambiguous evaluation.
 
   const calculatorJson = useMemo<CalculatorData | null>(() => {
     if (
@@ -411,9 +403,7 @@ const CalculatorBuilder = () => {
                       variant="outline"
                       size="sm"
                       className="h-7 text-xs"
-                      onClick={() =>
-                        appendTokenToFormula(index, inp.symbol || inp.id)
-                      }
+                      onClick={() => appendTokenToFormula(index, inp.id)}
                       title={`Insert ${inp.label} (${inp.symbol || inp.id})`}
                     >
                       {inp.symbol || inp.id}
@@ -421,11 +411,84 @@ const CalculatorBuilder = () => {
                   ))}
                 </div>
                 <div className="text-xs text-muted-foreground pt-2">
-                  Use input symbols in formulas. Supports +, -, *, /,
-                  parentheses, and functions supported by mathjs.
+                  Use input IDs in formulas. Supports +, -, *, /, parentheses,
+                  and functions supported by mathjs.
                 </div>
               </div>
             ))
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-card shadow-card border-0">
+        <CardHeader>
+          <CardTitle className="text-lg">Formula</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            {outputs.length === 0 ? (
+              <p className="text-muted-foreground text-center py-4">
+                No outputs yet to display formulae.
+              </p>
+            ) : (
+              outputs.map((output) => (
+                <div
+                  key={output.id}
+                  className="p-6 rounded-lg bg-muted/20 border-l-4 border-primary"
+                >
+                  <div className="text-center">
+                    <div className="text-lg font-medium text-muted-foreground mb-2">
+                      {output.label || "Output"}
+                    </div>
+                    <div className="text-2xl font-mono bg-background/80 p-4 rounded border inline-block min-w-[200px]">
+                      <span className="text-primary font-semibold">
+                        {output.symbol || output.id}
+                      </span>
+                      <span className="mx-2">=</span>
+                      <span className="text-foreground">
+                        {output.formula || "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {inputs.length > 0 && (
+            <div className="pt-4 border-t">
+              <h4 className="text-sm font-medium text-muted-foreground mb-3">
+                Where,
+              </h4>
+              <div className="grid gap-2">
+                {inputs.map((input) => (
+                  <div
+                    key={input.id}
+                    className="flex items-start gap-3 text-sm"
+                  >
+                    <span className="font-mono font-semibold text-primary min-w-[60px]">
+                      {input.symbol || input.id} =
+                    </span>
+                    <span className="text-muted-foreground">
+                      {input.label} ({input.unit})
+                    </span>
+                  </div>
+                ))}
+                {outputs.map((output) => (
+                  <div
+                    key={output.id}
+                    className="flex items-start gap-3 text-sm"
+                  >
+                    <span className="font-mono font-semibold text-primary min-w-[60px]">
+                      {output.symbol || output.id} =
+                    </span>
+                    <span className="text-muted-foreground">
+                      {output.label} ({output.unit})
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>

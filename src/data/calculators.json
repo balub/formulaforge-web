@@ -3,7 +3,6 @@
     "id": "resistor-calculator",
     "title": "Resistor Calculator",
     "description": "Calculate resistance and power using Ohm's Law",
-    "category": "Electronics",
     "inputs": [
       {
         "id": "voltage",
@@ -47,7 +46,6 @@
     "id": "length-converter",
     "title": "Length Converter",
     "description": "Convert between inches and centimeters",
-    "category": "Unit Conversion",
     "inputs": [
       {
         "id": "inches",
@@ -81,7 +79,6 @@
     "id": "bmi-calculator",
     "title": "BMI Calculator",
     "description": "Calculate Body Mass Index",
-    "category": "Health",
     "inputs": [
       {
         "id": "weight",
@@ -119,7 +116,6 @@
     "id": "led-series-resistor-calculator",
     "title": "LED Series Resistor Calculator",
     "description": "Calculate the required series resistor for LED circuits using Ohm's Law to ensure proper current limiting",
-    "category": "Electronics",
     "inputs": [
       {
         "id": "supply_voltage",
@@ -171,7 +167,7 @@
         "label": "Power Dissipation",
         "symbol": "P",
         "unit": "Watts (W)",
-        "formula": "((supply_voltage - voltage_drop) / forward_current) * (forward_current * forward_current)"
+        "formula": "(supply_voltage - voltage_drop) * forward_current"
       }
     ],
     "formula_display": "R = (Vs - Vd) / If",
@@ -211,9 +207,71 @@
         "id": "output_1758792833170",
         "label": "Voltage",
         "symbol": "V",
-        "unit": "Volt",
-        "formula": "input_1758792782858/input_1758792809110"
+        "unit": "Volts (V)",
+        "formula": "input_1758792782858 * input_1758792809110"
       }
+    ]
+  },
+  {
+    "id": "air-core-flat-spiral-inductance",
+    "title": "Air Core Flat Spiral Inductance Calculator",
+    "description": "Calculate the inductance of a flat spiral air core inductor based on dimensions and number of turns.",
+    "inputs": [
+      {
+        "id": "outer_diameter",
+        "label": "Outer Diameter",
+        "symbol": "d1",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "placeholder": "Enter outer diameter in mm"
+      },
+      {
+        "id": "inner_diameter",
+        "label": "Inner Diameter",
+        "symbol": "d2",
+        "unit": "mm",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "placeholder": "Enter inner diameter in mm"
+      },
+      {
+        "id": "turns",
+        "label": "Number of Turns",
+        "symbol": "N",
+        "unit": "Turns",
+        "type": "number",
+        "required": true,
+        "min": 1,
+        "placeholder": "Enter number of turns"
+      },
+      {
+        "id": "dimension",
+        "label": "Dimension Unit Factor",
+        "symbol": "k",
+        "unit": "",
+        "type": "number",
+        "required": true,
+        "placeholder": "1 for mm, 0.0254 for mils"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "inductance",
+        "label": "Inductance",
+        "symbol": "L",
+        "unit": "µH",
+        "formula": "(4.921 * (turns * turns) * ((outer_diameter + inner_diameter) * (outer_diameter + inner_diameter))) / ((15 * outer_diameter) - (7 * inner_diameter)) * dimension"
+      }
+    ],
+    "formula_display": "L = (4.921 * N² * (d1 + d2)²) / (15d1 - 7d2) * k",
+    "notes": [
+      "N = number of turns",
+      "d1 = outer diameter (mm)",
+      "d2 = inner diameter (mm)",
+      "k = dimension factor (1 for mm, 0.0254 for mils)"
     ]
   }
 ]
