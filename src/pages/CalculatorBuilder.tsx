@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import MathDisplay from "@/components/MathDisplay";
 
 interface InputField {
   id: string;
@@ -27,6 +28,7 @@ interface OutputField {
   symbol: string;
   unit: string;
   formula: string;
+  formula_display?: string;
 }
 
 interface CalculatorData {
@@ -36,6 +38,54 @@ interface CalculatorData {
   inputs: InputField[];
   outputs: OutputField[];
 }
+
+// Function to convert JavaScript formula to LaTeX format
+const convertFormulaToLaTeX = (
+  formula: string,
+  inputs: InputField[],
+  outputSymbol: string
+): string => {
+  if (!formula.trim()) return "";
+
+  let latexFormula = formula;
+
+  // Replace Math functions
+  latexFormula = latexFormula.replace(/Math\.sqrt\(/g, "\\sqrt{");
+  latexFormula = latexFormula.replace(/Math\.log\(/g, "\\ln(");
+  latexFormula = latexFormula.replace(/Math\.sin\(/g, "\\sin(");
+  latexFormula = latexFormula.replace(/Math\.cos\(/g, "\\cos(");
+  latexFormula = latexFormula.replace(/Math\.tan\(/g, "\\tan(");
+  latexFormula = latexFormula.replace(/Math\.pow\(/g, "\\text{pow}(");
+
+  // Replace operators
+  latexFormula = latexFormula.replace(/\*/g, " \\cdot ");
+  latexFormula = latexFormula.replace(/\^/g, "^");
+
+  // Replace division with fractions (simple cases)
+  latexFormula = latexFormula.replace(
+    /([a-zA-Z0-9_]+)\s*\/\s*([a-zA-Z0-9_()]+)/g,
+    "\\frac{$1}{$2}"
+  );
+
+  // Replace input IDs with their symbols
+  inputs.forEach((input) => {
+    const regex = new RegExp(`\\b${input.id}\\b`, "g");
+    latexFormula = latexFormula.replace(regex, input.symbol || input.id);
+  });
+
+  // Handle parentheses for sqrt and ln
+  latexFormula = latexFormula.replace(/\\sqrt\{([^}]+)\)/g, "\\sqrt{$1}");
+  latexFormula = latexFormula.replace(/\\ln\(([^)]+)\)/g, "\\ln($1)");
+
+  // Handle scientific notation
+  latexFormula = latexFormula.replace(
+    /(\d+\.?\d*)\s*e\s*([+-]?\d+)/g,
+    "$1 \\times 10^{$2}"
+  );
+
+  // Add output symbol
+  return `${outputSymbol} = ${latexFormula}`;
+};
 
 const CalculatorBuilder = () => {
   const [title, setTitle] = useState("");
@@ -115,6 +165,17 @@ const CalculatorBuilder = () => {
     ) {
       return null;
     }
+
+    // Generate outputs with formula_display
+    const outputsWithDisplay = outputs.map((output) => ({
+      ...output,
+      formula_display: convertFormulaToLaTeX(
+        output.formula,
+        inputs,
+        output.symbol || output.id
+      ),
+    }));
+
     return {
       id: title
         .toLowerCase()
@@ -123,7 +184,7 @@ const CalculatorBuilder = () => {
       title: title.trim(),
       description: description.trim(),
       inputs,
-      outputs,
+      outputs: outputsWithDisplay,
     };
   }, [title, description, inputs, outputs]);
 
@@ -422,7 +483,7 @@ const CalculatorBuilder = () => {
 
       <Card className="bg-gradient-card shadow-card border-0">
         <CardHeader>
-          <CardTitle className="text-lg">Formula</CardTitle>
+          <CardTitle className="text-lg">Formula Preview</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
@@ -431,27 +492,57 @@ const CalculatorBuilder = () => {
                 No outputs yet to display formulae.
               </p>
             ) : (
-              outputs.map((output) => (
-                <div
-                  key={output.id}
-                  className="p-6 rounded-lg bg-muted/20 border-l-4 border-primary"
-                >
-                  <div className="text-center">
-                    <div className="text-lg font-medium text-muted-foreground mb-2">
-                      {output.label || "Output"}
-                    </div>
-                    <div className="text-2xl font-mono bg-background/80 p-4 rounded border inline-block min-w-[200px]">
-                      <span className="text-primary font-semibold">
-                        {output.symbol || output.id}
-                      </span>
-                      <span className="mx-2">=</span>
-                      <span className="text-foreground">
-                        {output.formula || "—"}
-                      </span>
+              outputs.map((output) => {
+                const latexFormula = convertFormulaToLaTeX(
+                  output.formula,
+                  inputs,
+                  output.symbol || output.id
+                );
+                return (
+                  <div
+                    key={output.id}
+                    className="p-6 rounded-lg bg-muted/20 border-l-4 border-primary"
+                  >
+                    <div className="text-center space-y-4">
+                      <div className="text-lg font-medium text-muted-foreground mb-2">
+                        {output.label || "Output"}
+                      </div>
+
+                      {/* JavaScript Formula */}
+                      <div>
+                        <div className="text-sm text-muted-foreground mb-2">
+                          JavaScript Formula:
+                        </div>
+                        <div className="text-lg font-mono bg-background/80 p-3 rounded border">
+                          <span className="text-primary font-semibold">
+                            {output.symbol || output.id}
+                          </span>
+                          <span className="mx-2">=</span>
+                          <span className="text-foreground">
+                            {output.formula || "—"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* LaTeX Preview */}
+                      {latexFormula && (
+                        <div>
+                          <div className="text-sm text-muted-foreground mb-2">
+                            Mathematical Display:
+                          </div>
+                          <div className="bg-background/80 p-4 rounded border">
+                            <MathDisplay
+                              math={latexFormula}
+                              display={true}
+                              className="text-lg"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 
