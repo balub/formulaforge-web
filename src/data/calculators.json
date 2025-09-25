@@ -114,5 +114,106 @@
         "formula": "weight / (height * height)"
       }
     ]
+  },
+  {
+    "id": "led-series-resistor-calculator",
+    "title": "LED Series Resistor Calculator",
+    "description": "Calculate the required series resistor for LED circuits using Ohm's Law to ensure proper current limiting",
+    "category": "Electronics",
+    "inputs": [
+      {
+        "id": "supply_voltage",
+        "label": "Supply Voltage",
+        "symbol": "Vs",
+        "unit": "Volts (V)",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "max": 50,
+        "step": 0.1,
+        "placeholder": "12"
+      },
+      {
+        "id": "voltage_drop",
+        "label": "Voltage Drop",
+        "symbol": "Vd",
+        "unit": "Volts (V)",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "max": 10,
+        "step": 0.1,
+        "placeholder": "2"
+      },
+      {
+        "id": "forward_current",
+        "label": "Forward Current",
+        "symbol": "If",
+        "unit": "Amperes (A)",
+        "type": "number",
+        "required": true,
+        "min": 0.001,
+        "max": 5,
+        "step": 0.001,
+        "placeholder": "0.02"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "resistance",
+        "label": "Resistance",
+        "symbol": "R",
+        "unit": "Ohms (Ω)",
+        "formula": "(supply_voltage - voltage_drop) / forward_current"
+      },
+      {
+        "id": "power_dissipation",
+        "label": "Power Dissipation",
+        "symbol": "P",
+        "unit": "Watts (W)",
+        "formula": "((supply_voltage - voltage_drop) / forward_current) * (forward_current * forward_current)"
+      }
+    ],
+    "formula_display": "R = (Vs - Vd) / If",
+    "notes": [
+      "Don't end with comma (,)",
+      "Ensure the resistor's power rating exceeds the calculated power dissipation",
+      "Use standard resistor values closest to the calculated resistance",
+      "Typical LED forward voltages: Red ~2V, Green/Blue ~3.3V, White ~3.3V"
+    ]
+  },
+  {
+    "id": "ohms-law",
+    "title": "Ohm's Law",
+    "description": "Ohm's Law Yo",
+    "inputs": [
+      {
+        "id": "input_1758792782858",
+        "label": "Current",
+        "symbol": "I",
+        "unit": "Amperes (A)",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter value"
+      },
+      {
+        "id": "input_1758792809110",
+        "label": "Resistance",
+        "symbol": "R",
+        "unit": "Ohms (Ω)",
+        "type": "number",
+        "required": true,
+        "placeholder": "Enter value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "output_1758792833170",
+        "label": "Voltage",
+        "symbol": "V",
+        "unit": "Volt",
+        "formula": "input_1758792782858/input_1758792809110"
+      }
+    ]
   }
 ]

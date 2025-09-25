@@ -4,8 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Dashboard from "./pages/Dashboard";
-import AdminPanel from "./pages/AdminPanel";
+import CalculatorsList from "./pages/CalculatorsList";
+import CalculatorBuilder from "./pages/CalculatorBuilder";
 import CalculatorView from "./pages/CalculatorView";
 import NotFound from "./pages/NotFound";
 
@@ -19,8 +19,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="admin" element={<AdminPanel />} />
+            <Route index element={<CalculatorsList />} />
+            <Route path="builder" element={<CalculatorBuilder />} />
             <Route path="calculator/:id" element={<CalculatorView />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,9 +1,9 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Calculator, Settings, Plus, Home } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import calculatorsData from '@/data/calculators.json';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { Calculator, Wrench, Plus, Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import calculatorsData from "@/data/calculators.json";
 
 const Sidebar = () => {
   return (
@@ -15,7 +15,9 @@ const Sidebar = () => {
             <Calculator className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-foreground">Calculator Blocks</h1>
+            <h1 className="text-lg font-bold text-foreground">
+              Calculator Blocks
+            </h1>
             <p className="text-sm text-muted-foreground">Build & Share</p>
           </div>
         </div>
@@ -35,11 +37,11 @@ const Sidebar = () => {
           }
         >
           <Home className="w-4 h-4" />
-          Dashboard
+          Calculators
         </NavLink>
 
         <NavLink
-          to="/admin"
+          to="/builder"
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 px-4 py-3 rounded-lg transition-smooth text-sm font-medium",
@@ -49,8 +51,8 @@ const Sidebar = () => {
             )
           }
         >
-          <Settings className="w-4 h-4" />
-          Admin Panel
+          <Wrench className="w-4 h-4" />
+          Builder
         </NavLink>
 
         <div className="pt-4">
@@ -62,7 +64,7 @@ const Sidebar = () => {
               <Plus className="w-3 h-3" />
             </Button>
           </div>
-          
+
           <div className="space-y-1">
             {calculatorsData.map((calc) => (
               <NavLink

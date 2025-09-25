@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calculator, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import calculatorsData from '@/data/calculators.json';
-import { evaluate } from 'mathjs';
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, Link } from "react-router-dom";
+import { ArrowLeft, Calculator, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import calculatorsData from "@/data/calculators.json";
+import { evaluate } from "mathjs";
 
 interface CalculatorData {
   id: string;
@@ -40,11 +46,19 @@ const CalculatorView = () => {
   const [results, setResults] = useState<Record<string, number>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const calculator = calculatorsData.find(calc => calc.id === id) as CalculatorData | undefined;
+  const calculator = calculatorsData.find((calc) => calc.id === id) as
+    | CalculatorData
+    | undefined;
 
-  const validateInput = (inputConfig: any, value: number): string | null => {
-    if (inputConfig.required && (isNaN(value) || value === null || value === undefined)) {
-      return 'This field is required';
+  const validateInput = (
+    inputConfig: CalculatorData["inputs"][number],
+    value: number
+  ): string | null => {
+    if (
+      inputConfig.required &&
+      (isNaN(value) || value === null || value === undefined)
+    ) {
+      return "This field is required";
     }
     if (!isNaN(value)) {
       if (inputConfig.min !== undefined && value < inputConfig.min) {
@@ -57,14 +71,14 @@ const CalculatorView = () => {
     return null;
   };
 
-  const calculateResults = () => {
+  const calculateResults = useCallback(() => {
     if (!calculator) return;
 
     const newResults: Record<string, number> = {};
     const newErrors: Record<string, string> = {};
 
     // Validate inputs
-    calculator.inputs.forEach(input => {
+    calculator.inputs.forEach((input) => {
       const value = inputValues[input.id];
       const error = validateInput(input, value);
       if (error) {
@@ -76,7 +90,7 @@ const CalculatorView = () => {
 
     // Calculate if no errors
     if (Object.keys(newErrors).length === 0) {
-      calculator.outputs.forEach(output => {
+      calculator.outputs.forEach((output) => {
         try {
           const result = evaluate(output.formula, inputValues);
           const numResult = Number(result);
@@ -89,11 +103,11 @@ const CalculatorView = () => {
     }
 
     setResults(newResults);
-  };
+  }, [calculator, inputValues]);
 
   useEffect(() => {
     calculateResults();
-  }, [inputValues, calculator]);
+  }, [calculateResults]);
 
   if (!calculator) {
     return (
@@ -101,7 +115,10 @@ const CalculatorView = () => {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Calculator not found. <Link to="/" className="text-primary hover:underline">Return to dashboard</Link>
+            Calculator not found.{" "}
+            <Link to="/" className="text-primary hover:underline">
+              Return to dashboard
+            </Link>
           </AlertDescription>
         </Alert>
       </div>
@@ -115,11 +132,13 @@ const CalculatorView = () => {
         <Link to="/">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
+            Back to Calculators
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">{calculator.title}</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            {calculator.title}
+          </h1>
           <p className="text-muted-foreground">{calculator.description}</p>
         </div>
       </div>
@@ -141,18 +160,20 @@ const CalculatorView = () => {
               <div key={input.id} className="space-y-2">
                 <Label htmlFor={input.id} className="text-sm font-medium">
                   {input.label} ({input.symbol})
-                  {input.required && <span className="text-destructive ml-1">*</span>}
+                  {input.required && (
+                    <span className="text-destructive ml-1">*</span>
+                  )}
                 </Label>
                 <Input
                   id={input.id}
                   type="number"
                   placeholder={`${input.placeholder} (${input.unit})`}
-                  value={inputValues[input.id] || ''}
+                  value={inputValues[input.id] || ""}
                   onChange={(e) => {
                     const value = parseFloat(e.target.value);
-                    setInputValues(prev => ({
+                    setInputValues((prev) => ({
                       ...prev,
-                      [input.id]: isNaN(value) ? undefined : value
+                      [input.id]: isNaN(value) ? undefined : value,
                     }));
                   }}
                   className={errors[input.id] ? "border-destructive" : ""}
@@ -186,7 +207,9 @@ const CalculatorView = () => {
                 </Label>
                 <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
                   <div className="text-2xl font-bold text-primary">
-                    {results[output.id] !== undefined ? results[output.id] : '—'}
+                    {results[output.id] !== undefined
+                      ? results[output.id]
+                      : "—"}
                     {results[output.id] !== undefined && (
                       <span className="text-sm font-normal text-muted-foreground ml-2">
                         {output.unit}
@@ -209,18 +232,27 @@ const CalculatorView = () => {
           {/* Formula Display */}
           <div className="space-y-4">
             {calculator.outputs.map((output) => (
-              <div key={output.id} className="p-6 rounded-lg bg-muted/20 border-l-4 border-primary">
+              <div
+                key={output.id}
+                className="p-6 rounded-lg bg-muted/20 border-l-4 border-primary"
+              >
                 <div className="text-center">
                   <div className="text-lg font-medium text-muted-foreground mb-2">
                     {output.label}
                   </div>
                   <div className="text-2xl font-mono bg-background/80 p-4 rounded border inline-block min-w-[200px]">
-                    <span className="text-primary font-semibold">{output.symbol}</span>
+                    <span className="text-primary font-semibold">
+                      {output.symbol}
+                    </span>
                     <span className="mx-2">=</span>
-                    <span className="text-foreground">{output.formula.replace(/(\w+)/g, (match) => {
-                      const input = calculator.inputs.find(inp => inp.id === match);
-                      return input ? input.symbol : match;
-                    })}</span>
+                    <span className="text-foreground">
+                      {output.formula.replace(/(\w+)/g, (match) => {
+                        const input = calculator.inputs.find(
+                          (inp) => inp.id === match
+                        );
+                        return input ? input.symbol : match;
+                      })}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -230,22 +262,34 @@ const CalculatorView = () => {
           {/* Variable Explanations */}
           {calculator.inputs.length > 0 && (
             <div className="pt-4 border-t">
-              <h4 className="text-sm font-medium text-muted-foreground mb-3">Where,</h4>
+              <h4 className="text-sm font-medium text-muted-foreground mb-3">
+                Where,
+              </h4>
               <div className="grid gap-2">
                 {calculator.inputs.map((input) => (
-                  <div key={input.id} className="flex items-start gap-3 text-sm">
+                  <div
+                    key={input.id}
+                    className="flex items-start gap-3 text-sm"
+                  >
                     <span className="font-mono font-semibold text-primary min-w-[60px]">
                       {input.symbol} =
                     </span>
-                    <span className="text-muted-foreground">{input.label} ({input.unit})</span>
+                    <span className="text-muted-foreground">
+                      {input.label} ({input.unit})
+                    </span>
                   </div>
                 ))}
                 {calculator.outputs.map((output) => (
-                  <div key={output.id} className="flex items-start gap-3 text-sm">
+                  <div
+                    key={output.id}
+                    className="flex items-start gap-3 text-sm"
+                  >
                     <span className="font-mono font-semibold text-primary min-w-[60px]">
                       {output.symbol} =
                     </span>
-                    <span className="text-muted-foreground">{output.label} ({output.unit})</span>
+                    <span className="text-muted-foreground">
+                      {output.label} ({output.unit})
+                    </span>
                   </div>
                 ))}
               </div>
