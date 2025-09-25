@@ -1,73 +1,201 @@
-# Welcome to your Lovable project
+# FormulaForge Web
 
-## Project info
+Interactive calculator playground for engineering and math formulas. Build, browse, and use calculators with live results and clean formula displays.
 
-**URL**: https://lovable.dev/projects/c98ae81d-d2b2-4fdf-a5af-ac043cb00c05
+## What's New
 
-## How can I edit this code?
+- Full-width layout: the sidebar navigation has been removed for a cleaner workspace.
+- Home page search bar: quickly find calculators by title or description.
+- Better validation UX: inputs only show errors after the user interacts with them.
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- Vite + React + TypeScript
+- Tailwind CSS + shadcn/ui
+- mathjs for evaluation
+- KaTeX for formula rendering
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c98ae81d-d2b2-4fdf-a5af-ac043cb00c05) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Prerequisites: Node.js 18+ and npm, pnpm, or bun.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone
+git clone <YOUR_REPO_URL>
+cd formulaforge-web
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+# Install (choose one)
 npm i
+# pnpm i
+# bun install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Run
 npm run dev
+# pnpm dev
+# bun run dev
 ```
 
-**Edit a file directly in GitHub**
+The app runs at `http://localhost:3000` (or the port Vite chooses).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Usage
 
-**Use GitHub Codespaces**
+### Browse Calculators
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Open the home page to see all available calculators as cards.
 
-## What technologies are used for this project?
+### Search Calculators
 
-This project is built with:
+- Use the search bar on the home page to filter calculators.
+- Matches on calculator title and description (case-insensitive, instant updates).
+- Shows helpful result counts and a clear button to reset the query.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Calculator View
 
-## How can I deploy this project?
+- Enter values in the Inputs panel; results update automatically.
+- Validation runs only after you interact with a field.
+- The Formula section displays the equation with symbols using KaTeX.
 
-Simply open [Lovable](https://lovable.dev/projects/c98ae81d-d2b2-4fdf-a5af-ac043cb00c05) and click on Share -> Publish.
+## Project Structure
 
-## Can I connect a custom domain to my Lovable project?
+- `src/pages/CalculatorsList.tsx`: Home page with search and calculator cards.
+- `src/pages/CalculatorView.tsx`: Individual calculator page.
+- `src/components/Layout.tsx`: App layout (full-width, no sidebar).
+- `src/data/calculators.json`: Calculator definitions (inputs, outputs, formulas).
+- `src/hooks/useCalculator.ts`: State, validation, and result computation.
 
-Yes, you can!
+## Add a New Calculator
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. Add a new entry to `src/data/calculators.json` with inputs and outputs.
+2. Each output must include a `formula` using input/output ids and mathjs syntax.
+3. Optionally set `formula_display` for custom KaTeX output.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Scripts
+
+```sh
+npm run dev       # start dev server
+npm run build     # production build
+npm run preview   # preview production build
+```
+
+## License
+
+MIT
+
+## Generate new JSON
+
+You are given the contents of an electronics calculator webpage (title, description, inputs, formula, etc.).  
+Your job is to convert it into a structured JSON definition in the exact format below.
+
+---
+
+### JSON FORMAT
+
+```json
+{
+  "id": "<unique-id-kebab-case>",
+  "title": "<Calculator Title>",
+  "description": "<One or two sentence description of what the calculator does>",
+  "inputs": [
+    {
+      "id": "<snake_case_id>",
+      "label": "<Human-friendly label>",
+      "symbol": "<math symbol>",
+      "unit": "<unit (leave empty if none)>",
+      "type": "number",
+      "required": true,
+      "placeholder": "<help text>"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "<snake_case_id>",
+      "label": "<Human-friendly output label>",
+      "symbol": "<math symbol>",
+      "unit": "<unit>",
+      "formula": "<valid JavaScript math expression, directly executable>",
+      "formula_display": "<LaTeX-style readable formula>"
+    }
+  ]
+}
+```
+
+---
+
+### RULES
+
+- Use valid JavaScript Math expressions (`Math.log10`, `Math.pow`, `Math.sqrt`, `*`, `/`, `+`, `-`).
+- Each input/output id must be in `snake_case`.
+- Top-level `id` must be in kebab-case.
+- `formula_display` must use LaTeX formatting. Escape backslashes properly.
+- Do not include trailing commas.
+- Always include all inputs and outputs shown in the page.
+- Units should match the website (e.g., "mm", "inches", "Ω"). If none, leave empty.
+- Replace variable names (`d, l, n`) with their matching input IDs.
+
+---
+
+### ✅ Example (taken directly from a real webpage)
+
+**Input webpage text:**
+
+PCB Microstrip Crosstalk Calculator  
+Inputs: Substrate Height (H, mm), Trace Spacing (S, mm)  
+Formula:  
+CTdb = 20 log10(1 / (1 + (S/H)^2))
+
+**Correct JSON output:**
+
+```json
+{
+  "id": "pcb-microstrip-crosstalk-calculator",
+  "title": "PCB Microstrip Crosstalk Calculator",
+  "description": "Calculate PCB microstrip crosstalk based on substrate height and trace spacing to estimate interconnection noise.",
+  "inputs": [
+    {
+      "id": "substrate_height",
+      "label": "Substrate Height",
+      "symbol": "H",
+      "unit": "mm",
+      "type": "number",
+      "required": true,
+      "placeholder": "Enter substrate height"
+    },
+    {
+      "id": "trace_spacing",
+      "label": "Trace Spacing",
+      "symbol": "S",
+      "unit": "mm",
+      "type": "number",
+      "required": true,
+      "placeholder": "Enter trace spacing"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "crosstalk",
+      "label": "CrossTalk",
+      "symbol": "CTdb",
+      "unit": "dB",
+      "formula": "20 * Math.log10(1 / (1 + Math.pow(trace_spacing / substrate_height, 2)))",
+      "formula_display": "CT_{db} = 20 \\log_{10}\\left(\\frac{1}{1 + (S/H)^2}\\right)"
+    }
+  ]
+}
+```
+
+---
+
+### TASK
+
+Whenever I paste a new calculator webpage (title, description, inputs, formulas, etc.),  
+convert it into JSON using the exact format and rules above.
+
+### Steps to use this prompt
+
+1. Open the target calculator webpage in your browser.
+2. Press Ctrl+A (Cmd+A on macOS) to select the entire page and copy it.
+3. Paste the copied page contents into an LLM (e.g., ChatGPT) alongside the prompt above.
+4. Verify the generated JSON for correctness (ids, units, formulas, LaTeX).
+5. Append the verified object to `src/data/calculators.json`.
+   - Keep the JSON array valid and sorted if desired.
+   - Do not add trailing commas.
