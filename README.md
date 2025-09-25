@@ -81,6 +81,10 @@ npm run preview   # preview production build
 
 MIT
 
+## Prompt
+
+```
+
 ## Generate new JSON
 
 You are given the contents of an electronics calculator webpage (title, description, inputs, formula, etc.).  
@@ -189,6 +193,8 @@ CTdb = 20 log10(1 / (1 + (S/H)^2))
 
 Whenever I paste a new calculator webpage (title, description, inputs, formulas, etc.),  
 convert it into JSON using the exact format and rules above.
+
+```
 
 ### Steps to use this prompt
 
